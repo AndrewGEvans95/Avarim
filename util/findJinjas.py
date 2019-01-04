@@ -4,6 +4,7 @@
 
 import os
 import ConfigParser
+import analyzeJinjas
 
 #Get configs
 config = ConfigParser.ConfigParser()
@@ -24,3 +25,6 @@ for dirName, subdirList, fileList in os.walk(rootDir, topdown=False):
 print "Found the following templates: "
 print jinjaTemplates
 
+for template in jinjaTemplates:
+	for var in analyzeJinjas.assocVars(analyzeJinjas.readJinjaFile(template)):
+		print template + " <- " + var
