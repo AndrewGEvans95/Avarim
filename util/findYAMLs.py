@@ -4,19 +4,30 @@
 
 import os
 import ConfigParser
+import parseYAMLs
 
 #Get configs
 config = ConfigParser.ConfigParser()
 config.read('../config/config.ini')
 
 rootDir = config.get("GLOBAL","yamlFilesDir")
+ignoreFile = config.get("GLOBAL", "ignoreFile")
 
 #Now traverse given rootDir to find all jinja Templates
 
-print "Scanning project..."
+print "Gathering YAML files..."
 
-jinjaTemplates = []
+#Must assume that all files are yaml files
+yamlFiles = []
 for dirName, subdirList, fileList in os.walk(rootDir, topdown=False):
 	for fname in fileList:
-		if ".yml" in fname:
-			jinjaTemplates.append(dirName+"/"+fname)
+		if ".pem" not in fname:
+			if ".txt" not in fname:
+				if "inventory" not in fname:
+					yamlFiles.append(dirName+"/"+fname)
+print yamlFiles
+
+
+for yamlFile in yamlFiles:
+	parseYAMLs.getYamlKeys(yamlFile)
+	reload(parseYAMLs)
